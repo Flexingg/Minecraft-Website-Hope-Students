@@ -6,132 +6,281 @@
     <title>Hope Students Minecraft</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Minecraft-style font -->
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    
     <style>
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1f2937; }
-        ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 4px; }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border: 2px solid #0f172a; }
+        
+        .font-mc { font-family: 'VT323', monospace; }
+        
         .glass-panel {
-            background: rgba(31, 41, 55, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(75, 85, 99, 0.4);
+            background: rgba(15, 23, 42, 0.85); /* Dark Slate Blue */
+            backdrop-filter: blur(8px);
+            border: 2px solid #1e40af; /* Blue-800 */
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
-        .tab-active { border-bottom: 2px solid #6366f1; color: #6366f1; }
+
+        /* Minecraft-style 3D Buttons */
+        .mc-btn {
+            border: none;
+            border-bottom: 4px solid rgba(0, 0, 0, 0.4);
+            transition: all 0.1s;
+            border-radius: 2px; 
+        }
+        .mc-btn:active:not(:disabled) {
+            transform: translateY(4px);
+            border-bottom-width: 0px;
+            margin-bottom: 4px; /* maintain layout flow */
+        }
+        .mc-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Subtle Grid Background */
+        .bg-grid-pattern {
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .tab-active { 
+            background-color: rgba(59, 130, 246, 0.2);
+            border-bottom: 3px solid #60a5fa; 
+            color: #ffffff; 
+        }
+        
         .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .text-glow { text-shadow: 0 0 10px rgba(96, 165, 250, 0.5); }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col relative overflow-x-hidden">
+<body class="bg-slate-950 text-gray-100 font-sans min-h-screen flex flex-col relative overflow-x-hidden">
 
-    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10">
-        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-gray-900 via-indigo-950 to-black opacity-90"></div>
+    <!-- Background Layers -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 bg-slate-950">
+        <!-- Grid Pattern -->
+        <div class="absolute inset-0 bg-grid-pattern opacity-50"></div>
+        <!-- Radial Gradient for depth -->
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-900 via-blue-950/50 to-black opacity-80"></div>
     </div>
 
-    <main class="flex-grow container mx-auto px-4 py-8 max-w-4xl">
+    <main class="flex-grow container mx-auto px-4 py-12 max-w-4xl">
         <!-- Header -->
         <div class="text-center mb-12 fade-in">
-            <h1 class="text-4xl md:text-6xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+            <h1 class="text-6xl md:text-7xl mb-2 text-white font-mc text-glow tracking-wide">
                 HOPE STUDENTS
             </h1>
-            <p class="text-xl text-gray-400 tracking-widest uppercase font-semibold">Minecraft SMP</p>
-            <div class="mt-4 inline-flex items-center bg-gray-800 rounded-full px-4 py-2 border border-gray-700 shadow-lg">
-                <span class="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                <span class="text-sm font-mono text-gray-300" id="server-ip">hopestudents.glori.fi</span>
-                <button onclick="copyIp()" class="ml-3 text-indigo-400 hover:text-white transition"><i class="fas fa-copy"></i></button>
+            <div class="inline-block bg-blue-900/50 px-3 py-1 border border-blue-500/30 mb-6 transform -skew-x-12">
+                <p class="text-xl text-blue-200 font-mc tracking-widest uppercase transform skew-x-12">Minecraft SMP</p>
+            </div>
+
+            <div class="mt-2 flex flex-col md:flex-row items-center justify-center gap-4">
+                <!-- IP Badge -->
+                <div class="inline-flex items-center bg-slate-900 px-1 py-1 border-2 border-gray-600 shadow-lg max-w-md w-full md:w-auto">
+                    <div class="bg-slate-800 px-4 py-2 flex items-center justify-between w-full border border-gray-700">
+                        <div class="flex items-center">
+                            <span class="w-3 h-3 bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)] mr-3"></span>
+                            <span class="text-lg font-mc text-white tracking-wide" id="server-ip">mc.hopestudents.org</span>
+                        </div>
+                        <button onclick="copyIp()" class="ml-4 text-blue-400 hover:text-white transition" title="Copy IP">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Whitelist Form -->
-        <div class="glass-panel rounded-2xl p-6 md:p-8 mb-12 shadow-2xl fade-in" style="animation-delay: 0.1s;">
-            <h2 class="text-2xl font-bold mb-4 flex items-center"><i class="fas fa-user-plus text-green-400 mr-3"></i> Get Whitelisted</h2>
-            <p class="text-gray-400 mb-6 text-sm">Enter your username to automatically add yourself to the server whitelist.</p>
+        <div class="glass-panel p-6 md:p-8 mb-12 shadow-2xl fade-in relative" style="animation-delay: 0.1s;">
+            <!-- Decor corners -->
+            <div class="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-blue-400"></div>
+            <div class="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-blue-400"></div>
+            <div class="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-blue-400"></div>
+            <div class="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-blue-400"></div>
+
+            <h2 class="text-3xl font-mc text-white mb-4 flex items-center text-glow">
+                <i class="fas fa-cube text-blue-400 mr-3 text-xl"></i> Join Server
+            </h2>
+            <p class="text-blue-200 mb-6 text-sm font-mono border-l-4 border-blue-500 pl-3">
+                Enter your username to instantly join the server whitelist.
+            </p>
             
             <form id="whitelistForm" onsubmit="submitWhitelist(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Minecraft Username</label>
-                    <div class="flex flex-col md:flex-row gap-3">
-                        <input type="text" id="username" required placeholder="e.g. Steve" 
-                            class="flex-grow bg-gray-800 border border-gray-600 text-white px-4 py-3 rounded-lg focus:border-indigo-500 focus:outline-none transition">
+                    <label class="block text-lg font-mc text-blue-300 mb-2">MINECRAFT USERNAME</label>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input type="text" id="username" required placeholder="Steve" 
+                            class="flex-grow bg-slate-900 border-2 border-gray-600 text-white px-4 py-3 font-mono focus:border-blue-500 focus:outline-none transition placeholder-gray-600">
                         
-                        <select id="platform" class="bg-gray-800 border border-gray-600 text-white px-4 py-3 rounded-lg focus:border-indigo-500">
-                            <option value="java">Java Edition</option>
-                            <option value="bedrock">Bedrock/Console</option>
-                        </select>
-
-                        <button type="submit" id="submitBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition flex items-center justify-center min-w-[150px]">
-                            <span>Add Me</span>
+                        <button type="submit" id="submitBtn" class="mc-btn bg-green-600 hover:bg-green-500 text-white font-mc text-xl py-2 px-8 shadow-lg flex items-center justify-center min-w-[160px]">
+                            <span>ADD ME</span>
                         </button>
                     </div>
                 </div>
-                <div id="statusMessage" class="hidden p-4 rounded-lg text-sm text-center border"></div>
+                <div id="statusMessage" class="hidden p-4 border-2 font-mono text-sm text-center"></div>
             </form>
         </div>
 
         <!-- Connection Info Tabs -->
-        <div class="glass-panel rounded-2xl overflow-hidden shadow-2xl fade-in" style="animation-delay: 0.2s;">
-            <div class="flex border-b border-gray-700 bg-gray-800/50 overflow-x-auto">
-                <button onclick="switchTab('java')" id="tab-java" class="tab-active flex-1 py-4 px-6 text-center font-semibold hover:bg-gray-800 transition whitespace-nowrap"><i class="fas fa-desktop mr-2"></i> Java</button>
-                <button onclick="switchTab('bedrock')" id="tab-bedrock" class="flex-1 py-4 px-6 text-center font-semibold text-gray-400 hover:bg-gray-800 transition whitespace-nowrap"><i class="fas fa-mobile-alt mr-2"></i> Mobile</button>
-                <button onclick="switchTab('console')" id="tab-console" class="flex-1 py-4 px-6 text-center font-semibold text-gray-400 hover:bg-gray-800 transition whitespace-nowrap"><i class="fas fa-gamepad mr-2"></i> Console</button>
+        <div class="glass-panel overflow-hidden shadow-2xl fade-in" style="animation-delay: 0.2s;">
+            <div class="flex border-b-2 border-blue-900/50 bg-slate-900/50 overflow-x-auto">
+                <button onclick="switchTab('java')" id="tab-java" class="tab-active flex-1 py-4 px-6 text-center font-mc text-xl hover:bg-slate-800 transition whitespace-nowrap">JAVA EDITION</button>
+                <button onclick="switchTab('bedrock')" id="tab-bedrock" class="flex-1 py-4 px-6 text-center font-mc text-xl text-gray-400 hover:bg-slate-800 transition whitespace-nowrap">MOBILE</button>
+                <button onclick="switchTab('console')" id="tab-console" class="flex-1 py-4 px-6 text-center font-mc text-xl text-gray-400 hover:bg-slate-800 transition whitespace-nowrap">CONSOLE</button>
             </div>
 
-            <div class="p-6 md:p-8 bg-gray-800/30 min-h-[300px]">
+            <div class="p-6 md:p-8 bg-slate-900/30 min-h-[300px]">
                 <!-- Java -->
                 <div id="content-java" class="space-y-4">
-                    <h3 class="text-xl font-bold text-white">Java Edition</h3>
-                    <ol class="list-decimal list-inside space-y-3 text-gray-300">
-                        <li>Click <strong>Multiplayer</strong> > <strong>Add Server</strong>.</li>
-                        <li>Name: <span class="text-indigo-300">Hope Students</span></li>
-                        <li>Address: <code class="bg-gray-900 px-2 py-1 rounded text-indigo-300">hopestudents.glori.fi</code></li>
-                        <li>Click Done and Join!</li>
-                    </ol>
+                    <h3 class="text-2xl font-mc text-blue-300 mb-4">Join on Java Edition</h3>
+                    <div class="space-y-3 font-mono text-sm md:text-base text-gray-300">
+                        <div class="flex items-start">
+                            <span class="bg-blue-900 text-blue-200 px-2 py-1 mr-3 text-xs rounded-sm h-6 flex items-center">1</span>
+                            <p>Click <strong>Multiplayer</strong> > <strong>Add Server</strong>.</p>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-blue-900 text-blue-200 px-2 py-1 mr-3 text-xs rounded-sm h-6 flex items-center">2</span>
+                            <p>Server Name: <span class="text-white">Hope Students</span></p>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-blue-900 text-blue-200 px-2 py-1 mr-3 text-xs rounded-sm h-6 flex items-center">3</span>
+                            <p>Server Address: <span class="text-green-400 bg-black px-2 py-1 border border-gray-700 select-all">mc.hopestudents.org</span></p>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-blue-900 text-blue-200 px-2 py-1 mr-3 text-xs rounded-sm h-6 flex items-center">4</span>
+                            <p>Click Done and Join!</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Bedrock -->
                 <div id="content-bedrock" class="hidden space-y-4">
-                    <h3 class="text-xl font-bold text-white">Bedrock (Phone/Win10)</h3>
-                    <ol class="list-decimal list-inside space-y-3 text-gray-300">
-                        <li>Click <strong>Play</strong> > <strong>Servers</strong>.</li>
-                        <li>Scroll to <strong>Add Server</strong>.</li>
-                        <li>Name: <span class="text-indigo-300">Hope Students</span></li>
-                        <li>Address: <code class="bg-gray-900 px-2 py-1 rounded text-indigo-300">hopestudents.glori.fi</code></li>
-                        <li>Port: <code class="text-indigo-300">19132</code></li>
-                        <li>Save and Join!</li>
-                    </ol>
+                    <h3 class="text-2xl font-mc text-blue-300 mb-4">Join on Bedrock (Phone/PC)</h3>
+                    <div class="space-y-3 font-mono text-sm md:text-base text-gray-300">
+                        <div class="flex items-start">
+                            <span class="bg-blue-900 text-blue-200 px-2 py-1 mr-3 text-xs rounded-sm h-6 flex items-center">1</span>
+                            <p>Click <strong>Play</strong> > <strong>Servers</strong> tab.</p>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-blue-900 text-blue-200 px-2 py-1 mr-3 text-xs rounded-sm h-6 flex items-center">2</span>
+                            <p>Scroll down to <strong>Add Server</strong>.</p>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-blue-900 text-blue-200 px-2 py-1 mr-3 text-xs rounded-sm h-6 flex items-center">3</span>
+                            <p>Name: <span class="text-white">Hope Students</span></p>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-blue-900 text-blue-200 px-2 py-1 mr-3 text-xs rounded-sm h-6 flex items-center">4</span>
+                            <p>Address: <span class="text-green-400 bg-black px-2 py-1 border border-gray-700 select-all">mc.hopestudents.org</span></p>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-blue-900 text-blue-200 px-2 py-1 mr-3 text-xs rounded-sm h-6 flex items-center">5</span>
+                            <p>Port: <span class="text-green-400">19132</span> (Default)</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Console -->
-                <div id="content-console" class="hidden space-y-4">
-                    <h3 class="text-xl font-bold text-white">Console (Xbox/Switch/PS)</h3>
-                    <div class="bg-gray-900/50 p-4 rounded border border-gray-700">
-                        <h4 class="font-bold text-indigo-400 mb-2">Easiest Method (Requires Phone)</h4>
-                        <p class="text-sm text-gray-400 mb-2">1. Download <strong>BedrockTogether</strong> app on your phone.</p>
-                        <p class="text-sm text-gray-400 mb-2">2. Enter IP: <code class="text-indigo-300">hopestudents.glori.fi</code> Port: <code class="text-indigo-300">19132</code></p>
-                        <p class="text-sm text-gray-400 mb-2">3. Tap "Run/Watch Ad".</p>
-                        <p class="text-sm text-gray-400">4. Check <strong>LAN Games</strong> in Friends tab on your console.</p>
+                <div id="content-console" class="hidden space-y-6">
+                    <h3 class="text-2xl font-mc text-blue-300 mb-4">Join on Console</h3>
+                    
+                    <!-- Method 1 -->
+                    <div class="bg-black/40 p-4 border border-blue-900/50 relative">
+                        <span class="absolute -top-3 right-4 bg-blue-600 text-white text-xs px-2 py-1 font-mono rounded shadow-sm">Easiest</span>
+                        <h4 class="font-bold text-white mb-2 font-mc text-xl">Method 1: BedrockTogether App</h4>
+                        <p class="text-sm text-blue-200 mb-4 font-mono">Requires a phone connected to the same WiFi.</p>
+                        
+                        <ul class="space-y-2 text-sm text-gray-300 font-mono">
+                            <li class="flex items-center"><i class="fas fa-chevron-right text-blue-500 mr-2"></i> Download <strong>"BedrockTogether"</strong> (iOS/Android).</li>
+                            <li class="flex items-center"><i class="fas fa-chevron-right text-blue-500 mr-2"></i> Enter IP: <span class="text-green-400 ml-1">mc.hopestudents.org</span></li>
+                            <li class="flex items-center"><i class="fas fa-chevron-right text-blue-500 mr-2"></i> Tap "Run".</li>
+                            <li class="flex items-center"><i class="fas fa-chevron-right text-blue-500 mr-2"></i> Check <strong>"LAN Games"</strong> on your Console.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Method 2 -->
+                    <div class="bg-black/40 p-4 border border-blue-900/50">
+                        <h4 class="font-bold text-white mb-2 font-mc text-xl">Method 2: DNS Settings</h4>
+                        <p class="text-sm text-blue-200 mb-4 font-mono">Permanent fix. Allows you to add servers normally.</p>
+                        
+                        <ul class="space-y-2 text-sm text-gray-300 font-mono">
+                            <li class="flex items-center"><i class="fas fa-chevron-right text-blue-500 mr-2"></i> Go to <strong>"Network Settings"</strong> > <strong>Advanced</strong>.</li>
+                            <li class="flex items-center"><i class="fas fa-chevron-right text-blue-500 mr-2"></i> Set DNS Settings to <strong>"Manual"</strong>.</li>
+                            <li class="flex items-center"><i class="fas fa-chevron-right text-blue-500 mr-2"></i> Primary: <span class="text-green-400 font-bold ml-1">104.238.130.180</span></li>
+                            <li class="flex items-center"><i class="fas fa-chevron-right text-blue-500 mr-2"></i> Secondary: <span class="text-green-400 font-bold ml-1">8.8.8.8</span></li>
+                            <li class="flex items-center"><i class="fas fa-chevron-right text-blue-500 mr-2"></i> Join any Featured Server (e.g. Hive).</li>
+                            <li class="flex items-center"><i class="fas fa-chevron-right text-blue-500 mr-2"></i> A menu will appear. Click <strong>"Manage Servers"</strong> > <strong>"Add Server"</strong>.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Discord Link -->
+        <div class="glass-panel p-8 mt-12 shadow-2xl fade-in text-center relative overflow-hidden" style="animation-delay: 0.3s;">
+            <div class="relative z-10">
+                <div class="mb-4 inline-block p-4 bg-slate-900 rounded-full border-2 border-[#5865F2]">
+                    <i class="fab fa-discord text-5xl text-[#5865F2]"></i>
+                </div>
+                <h2 class="text-3xl font-mc text-white mb-2">COMMUNITY DISCORD</h2>
+                <p class="text-blue-200 mb-6 max-w-lg mx-auto font-mono text-sm">
+                    Check in on the server while away, and chat with your friends while playing!
+                </p>
+                
+                <a href="https://discord.gg/dC753sfnVs" target="_blank" class="mc-btn inline-flex items-center bg-[#5865F2] hover:bg-[#4752C4] text-white font-mc text-xl py-3 px-8 shadow-lg transition">
+                    <i class="fab fa-discord mr-2"></i> JOIN SERVER
+                </a>
+            </div>
+        </div>
+
     </main>
 
-    <footer class="text-center text-gray-500 text-sm py-8">
+    <footer class="text-center text-blue-400/60 text-sm py-8 font-mono">
         &copy; 2025 Hope Students Ministry.
     </footer>
 
     <script>
         function copyIp() {
-            navigator.clipboard.writeText("hopestudents.glori.fi");
-            alert("IP copied!");
+            const ip = "mc.hopestudents.org";
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(ip).then(() => {
+                    alert("Server IP copied to clipboard!");
+                }).catch(() => {
+                    fallbackCopy(ip);
+                });
+            } else {
+                fallbackCopy(ip);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert("Server IP copied to clipboard!");
+            } catch (err) {
+                console.error('Fallback failed', err);
+            }
+            document.body.removeChild(textArea);
         }
 
         function switchTab(tab) {
             ['java', 'bedrock', 'console'].forEach(t => {
                 document.getElementById(`content-${t}`).classList.add('hidden');
-                document.getElementById(`tab-${t}`).classList.remove('tab-active', 'text-indigo-600');
+                document.getElementById(`tab-${t}`).classList.remove('tab-active', 'text-white');
                 document.getElementById(`tab-${t}`).classList.add('text-gray-400');
             });
             document.getElementById(`content-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-${tab}`).classList.add('tab-active', 'text-indigo-600');
+            document.getElementById(`tab-${tab}`).classList.add('tab-active', 'text-white');
             document.getElementById(`tab-${tab}`).classList.remove('text-gray-400');
         }
 
@@ -140,36 +289,35 @@
             const btn = document.getElementById('submitBtn');
             const status = document.getElementById('statusMessage');
             const username = document.getElementById('username').value;
-            const platform = document.getElementById('platform').value;
-
-            // Loading State
+            
             const originalText = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            status.className = 'hidden p-4 rounded-lg text-sm text-center border';
+            status.className = 'hidden p-4 border-2 font-mono text-sm text-center';
 
             try {
                 const response = await fetch('/api/whitelist', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, platform })
+                    body: JSON.stringify({ username })
                 });
                 
                 const data = await response.json();
 
                 status.classList.remove('hidden');
                 if (data.success) {
-                    status.classList.add('bg-green-900/50', 'border-green-500', 'text-green-200');
-                    status.innerHTML = `<i class="fas fa-check-circle mr-2"></i> ${data.message}`;
+                    status.classList.add('bg-green-900/40', 'border-green-500', 'text-green-300');
+                    status.innerHTML = `<i class="fas fa-check-square mr-2"></i> ${data.message}`;
                     document.getElementById('whitelistForm').reset();
                 } else {
-                    status.classList.add('bg-red-900/50', 'border-red-500', 'text-red-200');
-                    status.innerHTML = `<i class="fas fa-exclamation-circle mr-2"></i> ${data.message}`;
+                    status.classList.add('bg-red-900/40', 'border-red-500', 'text-red-300');
+                    status.innerHTML = `<i class="fas fa-exclamation-triangle mr-2"></i> ${data.message}`;
                 }
             } catch (err) {
                 status.classList.remove('hidden');
-                status.classList.add('bg-red-900/50', 'border-red-500', 'text-red-200');
-                status.innerHTML = "Connection error. Please try again later.";
+                status.classList.add('bg-red-900/40', 'border-red-500', 'text-red-300');
+                status.innerHTML = "Connection error. Try again later.";
+                console.log("Sent:", { username });
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalText;

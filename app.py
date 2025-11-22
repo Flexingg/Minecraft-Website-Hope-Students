@@ -99,7 +99,7 @@ def index():
 def whitelist_user():
     data = request.json
     raw_username = data.get('username')
-    platform = data.get('platform') # Get platform selection
+    # platform = data.get('platform') # Get platform selection
     
     if not raw_username:
         return jsonify({"success": False, "message": "Username required"}), 400
@@ -108,43 +108,72 @@ def whitelist_user():
     if not username:
         return jsonify({"success": False, "message": "Invalid username format"}), 400
 
-    # --- FIX: Handle Bedrock Prefix ---
-    # Floodgate needs the prefix (default '.') to distinguish Bedrock players
-    # from Java players when the server is in Online Mode.
-    if platform == 'bedrock':
-        # If it doesn't already start with the prefix, add it.
-        if not username.startswith(BEDROCK_PREFIX):
-            username = f"{BEDROCK_PREFIX}{username}"
-            debug_log(f"Bedrock platform selected. Adjusted username to: {username}")
+    # --- New Whitelisting Logic ---
+    # Attempt to whitelist as Java (or direct Bedrock if already prefixed)
+    java_success, java_response_msg = send_rcon_command(username)
+    debug_log(f"RCON Command Result (Java attempt): Success={java_success}, Message='{java_response_msg}'")
 
-    success, response_msg = send_rcon_command(username)
-    print(f"RCON Command Result: Success={success}, Message='{response_msg}'")
+    bedrock_success = False
+    bedrock_response_msg = ""
+    bedrock_username = ""
 
-    if success:
-        # Check various success messages from Vanilla/Spigot/Paper
-        if "Added" in response_msg:
-            user_msg = f"Success! {username} added to the whitelist."
-        elif "already" in response_msg:
-            user_msg = f"{username} is already whitelisted."
-        elif "does not exist" in response_msg:
-            # Specific help for this error
-            if platform == 'java':
-                user_msg = "Server could not find that Java username. Check your spelling?"
+    # If the initial attempt failed and the username doesn't already start with the bedrock prefix,
+    # try whitelisting with the bedrock prefix.
+    if not java_success and not username.startswith(BEDROCK_PREFIX):
+        bedrock_username = f"{BEDROCK_PREFIX}{username}"
+        bedrock_success, bedrock_response_msg = send_rcon_command(bedrock_username)
+        debug_log(f"RCON Command Result (Bedrock attempt): Success={bedrock_success}, Message='{bedrock_response_msg}'")
+
+    # Combine results and determine final response
+    if java_success or bedrock_success:
+        final_success = True
+        messages = []
+        
+        # Process Java attempt response
+        if java_success:
+            if "Added" in java_response_msg:
+                messages.append(f"Success! {username} added to the whitelist.")
+            elif "already" in java_response_msg:
+                messages.append(f"{username} is already whitelisted.")
+            elif "does not exist" in java_response_msg:
+                messages.append(f"Java username '{username}' not found. Check spelling.")
             else:
-                user_msg = "Server could not verify Bedrock account. Ensure Floodgate is installed."
-            # We mark this as false so the UI shows red
-            return jsonify({"success": False, "message": user_msg}), 400
-        else:
-            user_msg = f"Server response: {response_msg}"
-
+                messages.append(f"Java attempt response: {java_response_msg}")
+        
+        # Process Bedrock attempt response
+        if bedrock_success:
+            if "Added" in bedrock_response_msg:
+                messages.append(f"Success! {bedrock_username} (Bedrock) added to the whitelist.")
+            elif "already" in bedrock_response_msg:
+                messages.append(f"{bedrock_username} (Bedrock) is already whitelisted.")
+            elif "does not exist" in bedrock_response_msg:
+                messages.append(f"Bedrock username '{bedrock_username}' not found. Ensure Floodgate is installed and username is correct.")
+            else:
+                messages.append(f"Bedrock attempt response: {bedrock_response_msg}")
+        
+        final_message = " ".join(messages) if messages else "Whitelist operation completed."
+        
         return jsonify({
-            "success": True, 
-            "message": user_msg
+            "success": final_success, 
+            "message": final_message
         })
     else:
+        # Both attempts failed
+        error_messages = []
+        if java_response_msg:
+            error_messages.append(f"Java attempt failed: {java_response_msg}")
+        if bedrock_response_msg:
+            error_messages.append(f"Bedrock attempt failed: {bedrock_response_msg}")
+        
+        # If no specific error messages, provide a generic one
+        if not error_messages:
+            error_messages.append("Failed to whitelist username. Please try again or contact support.")
+
+        final_error_message = " ".join(error_messages)
+        
         return jsonify({
             "success": False, 
-            "message": response_msg
+            "message": final_error_message
         }), 500
 
 if __name__ == '__main__':
