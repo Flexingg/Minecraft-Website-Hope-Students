@@ -60,7 +60,9 @@ def send_rcon_command(username):
         # 2. ATTEMPT RCON CONNECTION
         # We use quotes around username for Xbox names with spaces
         command = f'whitelist add {username}'
+        command2 = f'whitelist add .{username}'  # For Bedrock with prefix
         print(command)
+    
         
         debug_log(f"Port is open. Attempting RCON Login/Command: {command}")
         
@@ -70,6 +72,8 @@ def send_rcon_command(username):
 
             response = mcr.command(command)
             debug_log(f"RCON Response 1: {response}")
+            response2 = mcr.command(command2)
+            debug_log(f"RCON Response 2: {response2}")
             
             # Force save
             mcr.command('whitelist reload')
