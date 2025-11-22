@@ -93,6 +93,12 @@
                         </button>
                     </div>
                 </div>
+                <!-- New World Map Button -->
+                <div class="inline-flex items-center bg-slate-900 px-1 py-1 border-2 border-gray-600 shadow-lg max-w-md w-full md:w-auto">
+                    <a href="#" id="bluemap-link" target="_blank" class="mc-btn bg-blue-600 hover:bg-blue-500 text-white font-mc text-xl py-2 px-8 shadow-lg flex items-center justify-center w-full">
+                        <i class="fas fa-globe mr-2"></i> SEE WORLD
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -243,6 +249,7 @@
 
     <footer class="text-center text-blue-400/60 text-sm py-8 font-mono">
         &copy; 2025 Hope Students Ministry.
+        <p class="mt-2">Talk to Surfer Ken (Jonathan) about getting a minecraft account if you are in need of one</p>
     </footer>
 
     <script>
@@ -323,6 +330,15 @@
                 btn.innerHTML = originalText;
             }
         }
+
+        // Set the BlueMap link dynamically
+        document.addEventListener('DOMContentLoaded', () => {
+            const bluemapLink = document.getElementById('bluemap-link');
+            if (bluemapLink) {
+                const currentHost = window.location.hostname;
+                bluemapLink.href = `http://${currentHost}:8100`;
+            }
+        });
     </script>
 </body>
 </html>
